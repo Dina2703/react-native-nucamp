@@ -4,8 +4,6 @@ import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 import CampsiteInfo from "./CampsiteInfoComponent";
 import { View, Platform } from "react-native";
-import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
-import { Constants } from "expo-constants";
 
 const DirectoryNavigator = createStackNavigator(
   {
@@ -33,7 +31,7 @@ class Main extends Component {
       <View
         style={{
           flex: 1,
-          paddingTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight,
+          paddingTop: 0,
         }}
       >
         <AppNavigator />
