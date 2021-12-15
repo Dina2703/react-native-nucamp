@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import Directory from "./DirectoryComponent";
-import { createStackNavigator } from "react-navigation-stack";
-import { createAppContainer } from "react-navigation";
 import CampsiteInfo from "./CampsiteInfoComponent";
 import { View, Platform } from "react-native";
+import { createStackNavigator } from "react-navigation-stack";
+import { createAppContainer } from "react-navigation";
+import Constants from "expo-constants";
 
 const DirectoryNavigator = createStackNavigator(
   {
     Directory: { screen: Directory },
     CampsiteInfo: { screen: CampsiteInfo },
   },
+
   {
     initialRouteName: "Directory",
     defaultNavigationOptions: {
@@ -31,7 +33,7 @@ class Main extends Component {
       <View
         style={{
           flex: 1,
-          paddingTop: 0,
+          paddingTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight,
         }}
       >
         <AppNavigator />
