@@ -1,7 +1,17 @@
 import React, { Component } from "react";
 import { FlatList, ScrollView, Text } from "react-native";
 import { Card, ListItem } from "react-native-elements";
-import { PARTNERS } from "../shared/partners";
+import { connect } from "react-redux";
+import { baseUrl } from "../shared/baseUrl";
+
+{
+  /*the function receives the state as a prop and returns the partners data from the state. We don't need entite state, we only need a part of it. */
+}
+const mapStateToProps = (state) => {
+  return {
+    partners: state.partners,
+  };
+};
 
 function Mission() {
   return (
@@ -20,12 +30,7 @@ function Mission() {
 }
 
 class About extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      partners: PARTNERS,
-    };
-  }
+
   static navigationOptions = {
     title: "About Us",
   };
@@ -35,8 +40,7 @@ class About extends Component {
         <ListItem
           title={item.name}
           subtitle={item.description}
-          leftAvatar={{ source: require("./images/bootstrap-logo.png") 
-        }}
+          leftAvatar={{ source: {uri: baseUrl + item.image}}}
         ></ListItem>
       );
     };
@@ -45,7 +49,8 @@ class About extends Component {
         <Mission />
         <Card title={"Community Partners"}>
           <FlatList
-            data={this.state.partners}
+          {/* first partners includes the isLoading. errMess and partners array props. We need the partners data array */}
+            data={this.props.partners.partners}
             keyExtractor={(item) => item.id.toString()}
             renderItem={renderPartner}
           ></FlatList>
@@ -54,4 +59,6 @@ class About extends Component {
     );
   }
 }
-export default About;
+
+{/*Connect the component to the Redux store, so About component can receive the partners props from the Redux store */}
+export default connect(mapStateToProps)(About);
