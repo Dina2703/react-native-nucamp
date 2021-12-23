@@ -4,9 +4,6 @@ import { Card, ListItem } from "react-native-elements";
 import { connect } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
 
-{
-  /*the function receives the state as a prop and returns the partners data from the state. We don't need entite state, we only need a part of it. */
-}
 const mapStateToProps = (state) => {
   return {
     partners: state.partners,
@@ -30,7 +27,6 @@ function Mission() {
 }
 
 class About extends Component {
-
   static navigationOptions = {
     title: "About Us",
   };
@@ -40,7 +36,7 @@ class About extends Component {
         <ListItem
           title={item.name}
           subtitle={item.description}
-          leftAvatar={{ source: {uri: baseUrl + item.image}}}
+          leftAvatar={{ source: { uri: baseUrl + item.image } }}
         ></ListItem>
       );
     };
@@ -49,7 +45,6 @@ class About extends Component {
         <Mission />
         <Card title={"Community Partners"}>
           <FlatList
-          {/* first partners includes the isLoading. errMess and partners array props. We need the partners data array */}
             data={this.props.partners.partners}
             keyExtractor={(item) => item.id.toString()}
             renderItem={renderPartner}
@@ -60,5 +55,4 @@ class About extends Component {
   }
 }
 
-{/*Connect the component to the Redux store, so About component can receive the partners props from the Redux store */}
 export default connect(mapStateToProps)(About);

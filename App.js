@@ -7,7 +7,6 @@ const store = ConfigureStore();
 
 export default function App() {
   return (
-    //this gives the Main component and all of its child components the ability to connect to the redux store
     <Provider store={store}>
       <Main />
     </Provider>
