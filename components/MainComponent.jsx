@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Directory from "./DirectoryComponent";
 import CampsiteInfo from "./CampsiteInfoComponent";
 import Home from "./Home";
+import Reservation from "./ReservationComponent";
 import {
   View,
   Platform,
@@ -26,8 +27,7 @@ import {
   fetchPartners,
 } from "../redux/ActionCreators";
 
-
-//ampDispatchToProps allows as access the action creators as props
+//mapDispatchToProps allows as access the action creators as props
 const mapDispatchToProps = {
   fetchCampsites,
   fetchComments,
@@ -145,6 +145,32 @@ const AboutNavigator = createStackNavigator(
   }
 );
 
+const ReservationNavigator = createStackNavigator(
+  {
+    Reservation: { screen: Reservation },
+  },
+
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      headerStyle: {
+        backgroundColor: "#5637DD",
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        color: "#fff",
+      },
+      headerLeft: (
+        <Icon
+          name="tree"
+          type="font-awesome"
+          iconStyle={styles.stackIcon}
+          onPress={() => navigation.toggleDrawer()}
+        />
+      ),
+    }),
+  }
+);
+
 const CustomDrawerContentComponent = (props) => (
   <ScrollView>
     <SafeAreaView
@@ -182,6 +208,15 @@ const MainNavigator = createDrawerNavigator(
       navigationOptions: {
         drawerIcon: ({ tintColor }) => (
           <Icon name="list" type="font-awesome" size={24} color={tintColor} />
+        ),
+      },
+    },
+    Reservation: {
+      screen: ReservationNavigator,
+      navigationOptions: {
+        drawerLabel: "Reserve Campsite",
+        drawerIcon: ({ tintColor }) => (
+          <Icon name="tree" type="font-awesome" size={24} color={tintColor} />
         ),
       },
     },
