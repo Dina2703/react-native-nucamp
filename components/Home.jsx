@@ -3,6 +3,7 @@ import { View, Text, ScrollView } from "react-native";
 import { Card } from "react-native-elements";
 import { connect } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
+import Loading from "./LoadingComponent";
 
 const mapStateToProps = (state) => {
   return {
@@ -12,7 +13,17 @@ const mapStateToProps = (state) => {
   };
 };
 
-function RenderItem({ item }) {
+function RenderItem({ item, isLoading, errMess }) {
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (errMess) {
+    return (
+      <View>
+        <Text>{errMess}</Text>
+      </View>
+    );
+  }
   if (item) {
     return (
       <Card featuredTitle={item.name} image={{ uri: baseUrl + item.image }}>
@@ -43,6 +54,8 @@ class Home extends React.Component {
               (campsite) => campsite.featured
             )[0]
           }
+          isLoading={this.props.campsites.isLoading}
+          errMess={this.props.campsites.errMess}
         />
         <RenderItem
           item={
@@ -50,6 +63,8 @@ class Home extends React.Component {
               (promotion) => promotion.featured
             )[0]
           }
+          isLoading={this.props.promotions.isLoading}
+          errMess={this.props.promotions.errMess}
         />
         <RenderItem
           item={
@@ -57,6 +72,8 @@ class Home extends React.Component {
               (partner) => partner.featured
             )[0]
           }
+          isLoading={this.props.partners.isLoading}
+          errMess={this.props.partners.errMess}
         />
       </ScrollView>
     );
