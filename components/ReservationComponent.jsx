@@ -36,9 +36,10 @@ class Reservation extends React.Component {
   render() {
     return (
       <ScrollView>
-        <View>
-          <Text>Number of Campers</Text>
+        <View style={styles.formRow}>
+          <Text style={styles.formLabel}>Number of Campers</Text>
           <Picker
+            style={styles.formItem}
             selectedValue={this.state.campers}
             onValueChange={(itemValue) => this.setState({ campers: itemValue })}
           >
@@ -50,16 +51,17 @@ class Reservation extends React.Component {
             <Picker.Item label="6" value="6" />
           </Picker>
         </View>
-        <View>
-          <Text>Hike-In?</Text>
+        <View style={styles.formRow}>
+          <Text style={styles.formLabel}>Hike-In?</Text>
           <Switch
+            style={styles.formItem}
             value={this.state.hikeIn}
-            trackColor={{ true: "5637DD", false: null }}
+            trackColor={{ true: "5637DD", false: 'null' }}
             onValueChange={(value) => this.setState({ hikeIn: value })}
           />
         </View>
-        <View>
-          <Text>Date</Text>
+        <View style={styles.formRow}>
+          <Text style={styles.formLabel}>Date</Text>
           <Button
             onPress={() =>
               this.setState({ showCalendar: !this.state.showCalendar })
@@ -78,10 +80,11 @@ class Reservation extends React.Component {
               selectedDate &&
                 this.setState({ date: selectedDate, showCalendar: false });
             }}
+            style={styles.formItem}
           />
         )}
 
-        <View>
+        <View style={styles.formRow}>
           <Button
             onPress={() => this.handleReservation()}
             title="Search"
@@ -93,5 +96,22 @@ class Reservation extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  formRow: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+    flexDirection: "row",
+    margin: 20,
+  },
+  formLabel: {
+    fontSize: 18,
+    flex: 2,
+  },
+  formItem: {
+    flex: 1,
+  },
+});
 
 export default Reservation;
