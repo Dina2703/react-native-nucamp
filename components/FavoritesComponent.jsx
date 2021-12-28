@@ -1,10 +1,9 @@
-import React from "react";
+import React, { Component } from "react";
 import { FlatList, View, Text } from "react-native";
 import { ListItem } from "react-native-elements";
 import { connect } from "react-redux";
 import { Loading } from "./LoadingComponent";
 import { baseUrl } from "../shared/baseUrl";
-import { campsites } from "../redux/campsites";
 
 const mapStateToProps = (state) => {
   return {
@@ -13,10 +12,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-class Favorite extends React.Component {
+class Favorites extends Component {
   static navigationOptions = {
     title: "My Favorites",
   };
+
   render() {
     const { navigate } = this.props.navigation;
     const renderFavoriteItem = ({ item }) => {
@@ -24,7 +24,7 @@ class Favorite extends React.Component {
         <ListItem
           title={item.name}
           subtitle={item.description}
-          leftAvatar={{ source: { uri: baseUrl + item.inage } }}
+          leftAvatar={{ source: { uri: baseUrl + item.image } }}
           onPress={() => navigate("CampsiteInfo", { campsiteId: item.id })}
         />
       );
@@ -51,4 +51,5 @@ class Favorite extends React.Component {
     );
   }
 }
-export default mapStateToProps(Favorite);
+
+export default connect(mapStateToProps)(Favorites);

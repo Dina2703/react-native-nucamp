@@ -3,7 +3,7 @@ import Directory from "./DirectoryComponent";
 import CampsiteInfo from "./CampsiteInfoComponent";
 import Home from "./Home";
 import Reservation from "./ReservationComponent";
-import FavoritesComponent from "./FavoritesComponent";
+import Favorites from "./FavoritesComponent";
 import {
   View,
   Platform,
@@ -174,9 +174,8 @@ const ReservationNavigator = createStackNavigator(
 
 const FavoritesNavigator = createStackNavigator(
   {
-    Reservation: { screen: Favorites },
+    Favorites: { screen: Favorites },
   },
-
   {
     defaultNavigationOptions: ({ navigation }) => ({
       headerStyle: {
