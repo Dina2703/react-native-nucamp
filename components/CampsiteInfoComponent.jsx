@@ -47,7 +47,7 @@ function RenderCampsite({ campsite, favorite, markFavorite, onShowModal }) {
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderGrant: () => {
-      view.current.rubberBand(1000)
+      view.current.pulse(1000)
       .then(endState => console.log(endState.finished ? 'finished' : 'canceled'));
     },
     onPanResponderEnd: (e, gestureState) => {
