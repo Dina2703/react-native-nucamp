@@ -39,16 +39,19 @@ const mapDispatchToProps = {
 };
 
 function RenderCampsite({ campsite, favorite, markFavorite, onShowModal }) {
-
   const view = React.createRef();
 
   const recognizeDrag = ({ dx }) => (dx < -200 ? true : false);
+  const recognizeComment = ({ dx }) => (dx < 200 ? true : false);
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderGrant: () => {
-      view.current.pulse(1000)
-      .then(endState => console.log(endState.finished ? 'finished' : 'canceled'));
+      view.current
+        .pulse(1000)
+        .then((endState) =>
+          console.log(endState.finished ? "finished" : "canceled")
+        );
     },
     onPanResponderEnd: (e, gestureState) => {
       console.log("pan responder end", gestureState);
@@ -72,10 +75,14 @@ function RenderCampsite({ campsite, favorite, markFavorite, onShowModal }) {
           ],
           { cancelable: false }
         );
+      } else if (recognizeComment(gestureState)) {
+        onShowModal();
       }
       return true;
+      
     },
   });
+  
   if (campsite) {
     return (
       <Animatable.View
