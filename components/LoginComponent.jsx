@@ -1,11 +1,12 @@
-import React from "react";
+import React, { Component } from "react";
 import { View, Button, StyleSheet } from "react-native";
-import { Input, Checkbox } from "react-native-elements";
+import { Input, CheckBox } from "react-native-elements";
 import * as SecureStore from "expo-secure-store";
 
-export default class Login extends React.Component {
+class Login extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       username: "",
       password: "",
@@ -13,11 +14,11 @@ export default class Login extends React.Component {
     };
   }
 
-  static navigationoptions = {
+  static navigationOptions = {
     title: "Login",
   };
 
-  hanldeLogin() {
+  handleLogin() {
     console.log(JSON.stringify(this.state));
     if (this.state.remember) {
       SecureStore.setItemAsync(
@@ -26,10 +27,10 @@ export default class Login extends React.Component {
           username: this.state.username,
           password: this.state.password,
         })
-      ).catch((err) => console.log("Could not save info", err));
+      ).catch((error) => console.log("Could not save user info", error));
     } else {
-      SecureStore.deleteItemAsync("userinfo").catch((err) =>
-        console.log("Could not delete iser info", err)
+      SecureStore.deleteItemAsync("userinfo").catch((error) =>
+        console.log("Could not delete user info", error)
       );
     }
   }
@@ -38,15 +39,9 @@ export default class Login extends React.Component {
     SecureStore.getItemAsync("userinfo").then((userdata) => {
       const userinfo = JSON.parse(userdata);
       if (userinfo) {
-        this.setState({
-          username: userinfo.username,
-        });
-        this.setState({
-          password: userinfo.password,
-        });
-        this.setState({
-          remember: true,
-        });
+        this.setState({ username: userinfo.username });
+        this.setState({ password: userinfo.password });
+        this.setState({ remember: true });
       }
     });
   }
@@ -56,7 +51,7 @@ export default class Login extends React.Component {
       <View style={styles.container}>
         <Input
           placeholder="Username"
-          leftIcon={{ type: "font-awesome", name: "user=o" }}
+          leftIcon={{ type: "font-awesome", name: "user-o" }}
           onChangeText={(username) => this.setState({ username })}
           value={this.state.username}
           containerStyle={styles.formInput}
@@ -70,8 +65,7 @@ export default class Login extends React.Component {
           containerStyle={styles.formInput}
           leftIconContainerStyle={styles.formIcon}
         />
-
-        <Checkbox
+        <CheckBox
           title="Remember Me"
           center
           checked={this.state.remember}
@@ -80,15 +74,16 @@ export default class Login extends React.Component {
         />
         <View style={styles.formButton}>
           <Button
-            onPress={() => this.hanldeLogin()}
+            onPress={() => this.handleLogin()}
             title="Login"
             color="#5637DD"
-          ></Button>
+          />
         </View>
       </View>
     );
   }
 }
+
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
@@ -108,3 +103,5 @@ const styles = StyleSheet.create({
     margin: 40,
   },
 });
+
+export default Login;
