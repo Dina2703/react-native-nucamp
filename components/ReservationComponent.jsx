@@ -35,7 +35,8 @@ class Reservation extends React.Component {
     });
   }
 
-  createTwoButtonAlert = () =>
+
+  handleReservation() {
     Alert.alert(
       "Begin Search?",
       `Number of Campers: ${this.state.campers}
@@ -48,9 +49,12 @@ class Reservation extends React.Component {
           style: "cancel",
         },
         { text: "OK", onPress: () => this.resetForm() },
-      ]
+      ],
+      {
+        cancelable: false
+      }
     );
-
+    }
   render() {
     return (
       <ScrollView>
@@ -107,7 +111,7 @@ class Reservation extends React.Component {
 
           <View style={styles.formRow}>
             <Button
-              onPress={this.createTwoButtonAlert}
+              onPress={() => this.handleReservation()}
               title="Search"
               color="#5637DD"
               accessibilityLabel="Tap me to search for available campsites to reserve"
