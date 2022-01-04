@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as Animatable from "react-native-animatable";
+import * as Notification from "expo-notifications";
 
 class Reservation extends React.Component {
   constructor(props) {
@@ -35,7 +36,6 @@ class Reservation extends React.Component {
     });
   }
 
-
   handleReservation() {
     Alert.alert(
       "Begin Search?",
@@ -45,16 +45,55 @@ class Reservation extends React.Component {
       [
         {
           text: "Cancel",
-          onPress: () => this.resetForm(),
+          onPress: () => {
+            console.log("Reservation Search Canceled");
+            this.resetForm();
+          },
           style: "cancel",
         },
-        { text: "OK", onPress: () => this.resetForm() },
+        {
+          text: "OK",
+          onPress: () => {
+            this.presentLocalNotification(
+              this.state.date.toLocaleDateString("en-US")
+            );
+            this.resetForm();
+          },
+        },
       ],
       {
-        cancelable: false
+        cancelable: false,
       }
     );
+  }
+
+  async presentLocalNotification(date) {
+    function sendNotification() {
+      Notification.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldShowAlert: true,
+        }),
+      });
+
+      Notification.scheduleNotificationAsync({
+        content: {
+          title: "Your Campsite Reservation Search",
+          body: `Search for ${date} requested`,
+        },
+        /* below code to trigger notification immediately, we could set it to repeat or some time */
+        trigger: null,
+      });
     }
+    /* the await keyword is a JS ES* keyword that can only be used inside an async function*/
+    let permissions = await Notification.getPermissionsAsync();
+    if (!permissions.granted) {
+      permissions = await Notification.requestPermissionsAsync();
+    }
+    if (permissions.granted) {
+      sendNotification();
+    }
+  }
+
   render() {
     return (
       <ScrollView>
