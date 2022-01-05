@@ -133,6 +133,28 @@ class RegisterTab extends Component {
       imageUrl: baseUrl + "images/logo.png",
     };
   }
+
+  getImageFromCamera = async () => {
+    const cameraPermission = await Permissions.askAsync(Permissions.CAMERA);
+    const cameraRollPermission = await Permissions.askAsync(
+      Permissions.MEDIA_LIBRARY
+    );
+
+    if (
+      cameraPermission.status === "granted" &&
+      cameraRollPermission.status === "granted"
+    ) {
+      const capturedImage = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+      });
+      if (!capturedImage.cancelled) {
+        console.log(capturedImage);
+        this.setState({ imageUrl: capturedImage.uri });
+      }
+    }
+  };
+
   handleRegister() {
     console.log(JSON.stringify(this.state));
     if (this.state.remember) {
@@ -149,6 +171,7 @@ class RegisterTab extends Component {
       );
     }
   }
+
   static navigationOptions = {
     title: "Register",
     tabBarIcon: ({ tintColor }) => (
@@ -163,6 +186,14 @@ class RegisterTab extends Component {
   render() {
     return (
       <ScrollView>
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: this.state.imageUrl }}
+            loadingIndicatorSource={require("./images/logo.png")}
+            style={styles.image}
+          />
+          <Button title="Camera" onPress={this.getImageFromCamera} />
+        </View>
         <View style={styles.container}>
           <Input
             placeholder="Username"
@@ -251,20 +282,33 @@ const Login = createBottomTabNavigator(
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
-    margin: 20,
+    margin: 10,
   },
   formIcon: {
     marginRight: 10,
   },
   formInput: {
-    padding: 10,
+    padding: 5,
   },
   formCheckbox: {
-    margin: 10,
+    margin: 8,
     backgroundColor: null,
   },
   formButton: {
-    margin: 40,
+    margin: 20,
+    marginRight: 40,
+    marginLeft: 40,
+  },
+  imageContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    margin: 10,
+  },
+  image: {
+    width: 60,
+    height: 60,
   },
 });
 
