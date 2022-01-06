@@ -11,6 +11,8 @@ import {
   Text,
   ScrollView,
   Image,
+  Alert,
+  ToastAndroid,
 } from "react-native";
 import { createStackNavigator } from "react-navigation-stack";
 import { createDrawerNavigator, DrawerItems } from "react-navigation-drawer";
@@ -28,6 +30,7 @@ import {
   fetchPromotions,
   fetchPartners,
 } from "../redux/ActionCreators";
+import NetInfo from "@react-native-community/netinfo";
 
 //mapDispatchToProps allows as access the action creators as props
 const mapDispatchToProps = {
@@ -324,7 +327,7 @@ const MainNavigator = createDrawerNavigator(
     },
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: "Home",
     drawerBackgroundColor: "#CEC8FF",
     contentComponent: CustomDrawerContentComponent,
   }
@@ -338,7 +341,50 @@ class Main extends Component {
     this.props.fetchComments();
     this.props.fetchPromotions();
     this.props.fetchPartners();
+    //NetInfo.fetch() returns a method that resolves to a NetInfoState object
+    //we're getting netInfoState object(we named it here connectionInfo) back from NetInfo.fetch method
+    NetInfo.fetch().then((connectionInfo) => {
+      Platform.OS === "ios"
+        ? Alert.alert(
+            `Initial Network Connectivity Type: ${connectionInfo.type}`
+          )
+        : ToastAndroid.show(
+            `Initial Network Connectivity Type: ${connectionInfo.type}`,
+            ToastAndroid.LONG
+          );
+    });
+    //because we're inside the method(ComponentDidMount) we have to use this keyword to specify that we're creating this as a method on the parent class rather then as a local variable inside componentWillMount
+    this.unsubscribeNetInfo = NetInfo.addEventListener((connectionInfo) => {
+      this.handleConnectivityChange(connectionInfo);
+    });
   }
+
+  componentWillUnmount() {
+    //when the main component unmounts we call unsubscribeNetInfo() here to stop listening for connection changes
+    this.unsubscribeNetInfo();
+  }
+
+  handleConnectivityChange = (connectionInfo) => {
+    let connectionMgs = "You are mow connected to an active network.";
+    switch (connectionInfo.type) {
+      case "none":
+        connectionMgs = "No network connection is active";
+        break;
+      case "unknown":
+        connectionMgs = "The network connection state is now unknown";
+        break;
+      case "cellular":
+        connectionMgs = "You are now connected to a cellular network";
+        break;
+      case "wifi":
+        connectionMgs = "You are now connected to a WiFi network";
+        break;
+    }
+    Platform.OS === "ios"
+      ? Alert.alert("Connection change:" + connectionMgs)
+      : ToastAndroid.show(connectionMgs, ToastAndroid.LONG);
+  };
+
   render() {
     return (
       <View
