@@ -341,18 +341,31 @@ class Main extends Component {
     this.props.fetchComments();
     this.props.fetchPromotions();
     this.props.fetchPartners();
+
     //NetInfo.fetch() returns a method that resolves to a NetInfoState object
     //we're getting netInfoState object(we named it here connectionInfo) back from NetInfo.fetch method
-    NetInfo.fetch().then((connectionInfo) => {
+    // NetInfo.fetch().then((connectionInfo) => {
+    //   Platform.OS === "ios"
+    //     ? Alert.alert(
+    //         `Initial Network Connectivity Type: ${connectionInfo.type}`
+    //       )
+    //     : ToastAndroid.show(
+    //         `Initial Network Connectivity Type: ${connectionInfo.type}`,
+    //         ToastAndroid.LONG
+    //       );
+    // });
+
+    //TASK-3 switch to async/await
+    showNetInfo = async () => {
+      const connectionInfo = await NetInfo.fetch();
       Platform.OS === "ios"
-        ? Alert.alert(
-            `Initial Network Connectivity Type: ${connectionInfo.type}`
-          )
+        ? Alert.alert("Initial Network Connectivity Type:", connectionInfo.type)
         : ToastAndroid.show(
-            `Initial Network Connectivity Type: ${connectionInfo.type}`,
+            "Initial Network Connectivity Type: " + connectionInfo.type,
             ToastAndroid.LONG
           );
-    });
+    };
+
     //because we're inside the method(ComponentDidMount) we have to use this keyword to specify that we're creating this as a method on the parent class rather then as a local variable inside componentWillMount
     this.unsubscribeNetInfo = NetInfo.addEventListener((connectionInfo) => {
       this.handleConnectivityChange(connectionInfo);
