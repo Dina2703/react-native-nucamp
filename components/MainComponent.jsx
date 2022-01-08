@@ -341,6 +341,7 @@ class Main extends Component {
     this.props.fetchComments();
     this.props.fetchPromotions();
     this.props.fetchPartners();
+    this.showNetInfo();
 
     //NetInfo.fetch() returns a method that resolves to a NetInfoState object
     //we're getting netInfoState object(we named it here connectionInfo) back from NetInfo.fetch method
@@ -355,22 +356,22 @@ class Main extends Component {
     //       );
     // });
 
-    //TASK-3 switch to async/await
-    showNetInfo = async () => {
-      const connectionInfo = await NetInfo.fetch();
-      Platform.OS === "ios"
-        ? Alert.alert("Initial Network Connectivity Type:", connectionInfo.type)
-        : ToastAndroid.show(
-            "Initial Network Connectivity Type: " + connectionInfo.type,
-            ToastAndroid.LONG
-          );
-    };
-
     //because we're inside the method(ComponentDidMount) we have to use this keyword to specify that we're creating this as a method on the parent class rather then as a local variable inside componentWillMount
     this.unsubscribeNetInfo = NetInfo.addEventListener((connectionInfo) => {
-      this.handleConnectivityChange(connectionInfo);
+      // this.handleConnectivityChange(connectionInfo);
     });
   }
+
+  //TASK-3 switch to async/await
+  showNetInfo = async () => {
+    const connectionInfo = await NetInfo.fetch();
+    Platform.OS === "ios"
+      ? Alert.alert("Initial Network Connectivity Type:", connectionInfo.type)
+      : ToastAndroid.show(
+          "Initial Network Connectivity Type: " + connectionInfo.type,
+          ToastAndroid.LONG
+        );
+  };
 
   componentWillUnmount() {
     //when the main component unmounts we call unsubscribeNetInfo() here to stop listening for connection changes
@@ -378,7 +379,7 @@ class Main extends Component {
   }
 
   handleConnectivityChange = (connectionInfo) => {
-    let connectionMgs = "You are mow connected to an active network.";
+    let connectionMgs = "You are now connected to an active network.";
     switch (connectionInfo.type) {
       case "none":
         connectionMgs = "No network connection is active";

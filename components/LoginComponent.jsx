@@ -135,22 +135,6 @@ class RegisterTab extends Component {
     };
   }
 
-  getImageFromGallery = async () => {
-    const cameraRollPermissions = await Permissions.askAsync(
-      Permissions.MEDIA_LIBRARY
-    );
-    if (cameraRollPermissions.status === "granted") {
-      const capturedImage = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        aspect: [1, 1],
-      });
-      if (!capturedImage.cancelled) {
-        console.log(capturedImage);
-        this.processImage(capturedImage.uri);
-      }
-    }
-  };
-
   getImageFromCamera = async () => {
     const cameraPermission = await Permissions.askAsync(Permissions.CAMERA);
     const cameraRollPermission = await Permissions.askAsync(
@@ -172,11 +156,26 @@ class RegisterTab extends Component {
     }
   };
 
+  getImageFromGallery = async () => {
+    const cameraRollPermissions = await Permissions.askAsync(
+      Permissions.MEDIA_LIBRARY
+    );
+    if (cameraRollPermissions.status === "granted") {
+      const capturedImage = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+      });
+      if (!capturedImage.cancelled) {
+        console.log(capturedImage);
+        this.processImage(capturedImage.uri);
+      }
+    }
+  };
   processImage = async (imgUri) => {
     const processedImage = await ImageManipulator.manipulateAsync(
       imgUri,
       [{ resize: { width: 400 } }],
-      { compress: 1, format: ImageManipulator.SaveFormat.PNG }
+      { format: "png" }
     );
     console.log(processedImage);
     this.setState({ imageUrl: processedImage.uri });
